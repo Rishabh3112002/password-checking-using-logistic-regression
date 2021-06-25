@@ -1,4 +1,5 @@
 #Checking if a Password is strong or not using Logistic Regression Algorithum
+from tkinter import *
 import numpy as np
 X = np.loadtxt('X.txt')#Training set
 y = np.loadtxt('y.txt')
@@ -44,26 +45,41 @@ def gradientDescentReg(X,y,theta,lamb, num_iters, alpha): # For finding values o
     for i in range (0, num_iters):
         if (np.min(J_hist) == J_hist[i]):
             return (J_theta[i][:])
-
-#Taking the password as input from the user and checking if password is strong or not
-a = gradientDescentReg(X,y,theta,lamb, num_iters, alpha)
-costFuncReg(theta, X, y, lamb)
-sigmoid(np.dot(X,theta))
-passwrd = input('Enter a password')
-le = len(passwrd)
-c = int(0)
-sp = int(0)
-for i in range (0,le):
-    if ord(passwrd[i])>=65 and ord(passwrd[i])<=90: # find the number of capitals in entered password
-        c = c+1
-    elif ord(passwrd[i])>=32 and ord(passwrd[i])<=47 or ord(passwrd[i])>=58 and ord(passwrd[i])<=64 or ord(passwrd[i])>=91 and ord(passwrd[i])<=96 or ord(passwrd[i])>=123 and ord(passwrd[i])<=126:# Find the number of special characters in entered password
-        sp = sp+1
-ch = -a[0]#for computing decision boundary
-sh = a[1]*le + a[2]*c + a[3]*sp #for computing decision boundary
-print(ch)
-print(sh)
-#checking password with decision boundary
-if sh>=ch:
-    print('Strong Password')
-else:
-    print('Weak password')
+root = Tk()
+canvas = Canvas(root, width=500, height=50) #Creating a canvas for GUI
+title = Label(root, text = "WELCOME TO PASSCHECK!", font = ("Helvetica", "20", "bold")) #Title for the application
+title.pack(pady = 30)
+label = Label(root, text = "Enter your password",font =("Helvetica", "16"))
+label.pack()
+e = Entry(root, width = 10, show = '*', font =("Helvetica", "20", "bold"))
+e.pack()
+def myClick():
+    a = gradientDescentReg(X, y, theta, lamb, num_iters, alpha)
+    costFuncReg(theta, X, y, lamb)
+    sigmoid(np.dot(X, theta))
+    passwrd = e.get()
+    le = len(passwrd)
+    c = int(0)
+    sp = int(0)
+    for i in range(0, le):
+        if ord(passwrd[i]) >= 65 and ord(passwrd[i]) <= 90:  # find the number of capitals in entered password
+            c = c + 1
+        elif ord(passwrd[i]) >= 32 and ord(passwrd[i]) <= 47 or ord(passwrd[i]) >= 58 and ord(passwrd[i]) <= 64 or ord(
+                passwrd[i]) >= 91 and ord(passwrd[i]) <= 96 or ord(passwrd[i]) >= 123 and ord(
+                passwrd[i]) <= 126:  # Find the number of special characters in entered password
+            sp = sp + 1
+    ch = -a[0]  # for computing decision boundary
+    sh = a[1] * le + a[2] * c + a[3] * sp  # for computing decision boundary
+    # print(ch)
+    # print(sh)
+    # checking password with decision boundary
+    if sh >= ch:
+        myLabel1 = Label(root, text="Strong password",font =("Helvetica", "16"), bg = 'green')
+    else:
+        myLabel1 = Label(root, text="Weak Password",font =("Helvetica", "16"), bg = 'red', fg = "white")
+    myLabel1.pack(pady = 20)
+    myLabel1.place(relx = 0.5, rely = 0.5, y = 80, anchor = 'n')
+myButton = Button(root, text = "Check", command = myClick)
+myButton.pack()
+canvas.pack()
+root.mainloop()
