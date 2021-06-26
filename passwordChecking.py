@@ -1,13 +1,6 @@
-#Checking if a Password is strong or not using Logistic Regression Algorithum
 from tkinter import *
 import numpy as np
-X = np.loadtxt('X.txt')#Training set
-y = np.loadtxt('y.txt')
-y = y.reshape(len(y),1)# Result for the training examples
-theta = np.array([[0],[0],[0],[0]])
-lamb = 1.5
-alpha = 1
-num_iters = 5000 #Value to run the number of iterations for minimizing theta
+
 def sigmoid(z): #Computing a sigmoid function for the hypothesis
     g = np.zeros(len(z))
     for i in range(0, len(z)):
@@ -46,14 +39,21 @@ def gradientDescentReg(X,y,theta,lamb, num_iters, alpha): # For finding values o
         if (np.min(J_hist) == J_hist[i]):
             return (J_theta[i][:])
 root = Tk()
-canvas = Canvas(root, width=500, height=50) #Creating a canvas for GUI
-title = Label(root, text = "WELCOME TO PASSCHECK!", font = ("Helvetica", "20", "bold")) #Title for the application
+canvas = Canvas(root, width=500, height=50)
+title = Label(root, text = "WELCOME TO PASSCHECK!", font = ("Helvetica", "20", "bold"))
 title.pack(pady = 30)
 label = Label(root, text = "Enter your password",font =("Helvetica", "16"))
 label.pack()
 e = Entry(root, width = 10, show = '*', font =("Helvetica", "20", "bold"))
 e.pack()
 def myClick():
+    X = np.loadtxt('X.txt')  # Training set
+    y = np.loadtxt('y.txt')
+    y = y.reshape(len(y), 1)  # Result for the training examples
+    theta = np.array([[0], [0], [0], [0]])
+    lamb = 1.5
+    alpha = 1
+    num_iters = 5000  # Value to run the number of iterations for minimizing theta
     a = gradientDescentReg(X, y, theta, lamb, num_iters, alpha)
     costFuncReg(theta, X, y, lamb)
     sigmoid(np.dot(X, theta))
@@ -72,11 +72,19 @@ def myClick():
     sh = a[1] * le + a[2] * c + a[3] * sp  # for computing decision boundary
     # print(ch)
     # print(sh)
+    X1 = np.array([1,le,c,sp])
+    X = np.vstack([X,X1])
+    np.savetxt('X.txt', X) #To input the data into the database
     # checking password with decision boundary
     if sh >= ch:
         myLabel1 = Label(root, text="Strong password",font =("Helvetica", "16"), bg = 'green')
+        y1 = np.array([1])
     else:
         myLabel1 = Label(root, text="Weak Password",font =("Helvetica", "16"), bg = 'red', fg = "white")
+        y1 = np.array([0])
+    y = np.vstack([y,y1])
+    np.savetxt('y.txt', y)
+    np.savetxt('y.txt',y) #To input the data into the database
     myLabel1.pack(pady = 20)
     myLabel1.place(relx = 0.5, rely = 0.5, y = 80, anchor = 'n')
 myButton = Button(root, text = "Check", command = myClick)
