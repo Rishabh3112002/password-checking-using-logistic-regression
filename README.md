@@ -17,5 +17,5 @@ This program uses logisrtic regression algorithm to find if a password is strong
   pip install numpy
 ```
 ```
-  pip install Pillow
+  pip install tk
 ```
